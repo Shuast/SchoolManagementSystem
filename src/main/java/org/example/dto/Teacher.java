@@ -1,6 +1,5 @@
 package org.example.dto;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Teacher {
     private String lname;
     private String fname;
@@ -37,9 +35,9 @@ public class Teacher {
     @Override
     public String toString() {
         return "Teacher{" +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", fname='" + fname + '\'' +
-                "lname='" + lname + '\'' +
+                ", lname='" + lname + '\'' +
                 ", department=" + department.getDepartmentName() +
                 '}';
     }

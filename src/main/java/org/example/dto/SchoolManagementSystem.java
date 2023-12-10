@@ -1,5 +1,6 @@
 package org.example.dto;
 
+
 /**
  * Manages students, courses, departments and teachers
  *
@@ -18,12 +19,18 @@ public class SchoolManagementSystem {
     private static final int MAX_COURSE_NUM = 5;
     private int courseNum = 0;
     private Course[] courses;
+    private static final int MAX_STUDENT_COURSES = 5;
+    private Course[] studentCourses; //will become array in student class that stores courses
+    private static final int MAX_COURSE_STUDENTS = 5;
+    private Student[] courseStudents; //will become array in course class that stores students
 
     public SchoolManagementSystem(String name) {
         this.departments = new Department[MAX_DEPARTMENT_NUM];
         this.students = new Student[MAX_STUDENT_NUM];
         this.teachers = new Teacher[MAX_TEACHER_NUM];
         this.courses = new Course[MAX_COURSE_NUM];
+        this.studentCourses = new Course[MAX_STUDENT_COURSES];
+        this.courseStudents = new Student[MAX_COURSE_STUDENTS];
     }
 
     /**
@@ -86,7 +93,7 @@ public class SchoolManagementSystem {
         if (courseNum < MAX_COURSE_NUM) {
             courses[courseNum] = new Course(courseName, credit, findDepartment(departmentId));
             courseNum++;
-            System.out.println("Added course " + courses[courseNum] + " successfully.");
+            System.out.println("Added course " + courses[courseNum - 1] + " successfully.");
         } else {
             System.out.printf("The amount of courses is already %d. Add course failed.\n", MAX_COURSE_NUM);
         }
@@ -144,9 +151,9 @@ public class SchoolManagementSystem {
      */
     public Department findDepartment(String departmentId) {
         for (Department department : departments) {
-            if (departmentId.equals(department.getId())) {
+            if (department != null && departmentId.equals(department.getId())) {
                 return department;
-            } else break;
+            }
         }
         return null;
     }
@@ -159,9 +166,9 @@ public class SchoolManagementSystem {
      */
     public Student findStudent(String studentId) {
         for (Student student : students) {
-            if (studentId.equals(student.getId())) {
+            if (student != null && studentId.equals(student.getId())) {
                 return student;
-            } else break;
+            }
         }
         return null;
     }
@@ -169,12 +176,12 @@ public class SchoolManagementSystem {
     /**
      * finds a teacher according to id provided.
      *
-     * @param teacherId id of the student to search for.
+     * @param teacherId id of the teacher to search for.
      * @return returns the teacher if it exists else it returns null.
      */
     public Teacher findTeacher(String teacherId) {
         for (Teacher teacher : teachers) {
-            if (teacherId.equals(teacher.getId())) {
+            if (teacher != null && teacherId.equals(teacher.getId())) {
                 return teacher;
             }
         }
@@ -184,35 +191,72 @@ public class SchoolManagementSystem {
     /**
      * finds a course according to id provided.
      *
-     * @param courseId id of the student to search for.
+     * @param courseId id of the course to search for.
      * @return returns the teacher if it exists else it returns null.
      */
     public Course findCourse(String courseId) {
         for (Course course : courses) {
-            if (courseId.equals(course.getId())) {
+            if (course != null && courseId.equals(course.getId())) {
                 return course;
-            } else break;
+            }
         }
         return null;
     }
 
     /**
-     * assigns a teacher to a course with using id of teacher and id of course.
+     * assigns a teacher to a course using id of teacher and id of course.
      *
      * @param teacherId id of teacher to assign to course.
-     * @param courseId  if of course to assign teacher to.
+     * @param courseId  id of course to assign teacher to.
      */
     public void modifyCourseTeacher(String teacherId, String courseId) {
-
+        if (findCourse(courseId) != null && findTeacher(teacherId) != null) {
+            findCourse(courseId).setTeacher(findTeacher(teacherId));
+            System.out.println(findCourse(courseId) + " teacher info updated successfully.");
+        } else if (findCourse(courseId) == null) {
+            System.out.printf("Cannot find any course match with courseId %s, modify teacher for course %s " +
+                    "failed.\n", courseId, courseId);
+        } else if (findTeacher(teacherId) == null) {
+            System.out.printf("Cannot find any teacher match with teacherId %s, modify teacher for course %s " +
+                    "failed.\n", teacherId, courseId);
+        }
     }
 
     /**
-     * assigns a student to a course with using id of student and id of course.
+     * assigns a student to a course using id of student and id of course.
      *
      * @param studentId id of student to assign to course.
-     * @param courseId  id of course to assign teacher to.
+     * @param courseId  id of course to assign student to.
      */
     public void registerCourse(String studentId, String courseId) {
-
+        Student student = findStudent(studentId);
+        Course course = findCourse(courseId);
+        if (course != null && student != null && student.getCourseNum() < MAX_STUDENT_COURSES
+                && course.getStudentNum() < MAX_COURSE_STUDENTS) {
+            studentCourses[student.getCourseNum()] = course;
+            student.setCourseNum(student.getCourseNum() + 1);
+            courseStudents[course.getStudentNum()] = student;
+            course.setStudentNum(course.getStudentNum() + 1);
+            student.setCourses(studentCourses);
+            course.setStudents(courseStudents);
+            System.out.println("Student register course successfully\n"); //escape sequence to match example output
+            System.out.println("Latest student info: " + student + "\n"); //escape sequence to match example output
+            System.out.println("Latest course info: " + course);
+        } else if (student == null) {
+            System.out.printf("Cannot find any student match with studentId %s.\n", studentId);
+        } else if (course == null) {
+            System.out.printf("Cannot find any student match with courseId %s.\n", courseId);
+        } else if (student.getCourseNum() >= MAX_STUDENT_COURSES && course.getStudentNum() >= MAX_COURSE_STUDENTS) {
+            System.out.printf("Student %s has already registered 5 courses, register course for student %s " +
+                    "failed.\n", studentId, studentId);
+            System.out.printf("Course %s has been fully registered, register course %s " +
+                    "for student %s failed.\n", courseId, courseId, studentId);
+        } else if (course.getStudentNum() >= MAX_COURSE_STUDENTS) {
+            System.out.printf("Course %s has been fully registered, register course %s " +
+                    "for student %s failed.\n", courseId, courseId, studentId);
+        } else {
+            System.out.printf("Student %s has already registered 5 courses, register course for student %s " +
+                    "failed.\n", studentId, studentId);
+        }
     }
 }

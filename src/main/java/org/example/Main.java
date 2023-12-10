@@ -9,10 +9,10 @@ public class Main {
     public static void main(String[] args) {
         SchoolManagementSystem college = new SchoolManagementSystem("Year 2023");
 
-        college.addDepartment("Humanities");
-        college.addStudent("Lana", "Mali", "D001");
-        college.addTeacher("Malio", " Robinson", "D001");
-        college.addCourse("Ethics", 1.5, "D001");
+        college.addDepartment("Computer Science");
+        college.addStudent("Johnny", "Test", "D001");
+        college.addTeacher("Yi", "Wang", "D001");
+        college.addCourse("Intro to programming", 3, "D001");
         college.printDepartments();
         college.printStudents();
         college.printTeachers();

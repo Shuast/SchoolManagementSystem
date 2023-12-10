@@ -1,10 +1,8 @@
 package org.example.dto;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
 
 /**
  * Course class
@@ -13,7 +11,6 @@ import java.util.Arrays;
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Course {
     private double credit;
     private String id;
@@ -44,16 +41,26 @@ public class Course {
         String studentStr = "[";
         for (Student student : students) {
             if (student != null) {
-                studentStr += student + ", ";
+                studentStr += student.getName() + ", ";
             }
         }
+        if (teacher != null) {
+            return "Course{" +
+                    "id='" + id + '\'' +
+                    ", courseName='" + courseName + '\'' +
+                    ", credit=" + credit +
+                    ", teacher=" + teacher.getName() +
+                    ", department=" + department.getDepartmentName() +
+                    ", students=" + studentStr +
+                    "]}";
+        }
         return "Course{" +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", courseName='" + courseName + '\'' +
-                "credit=" + credit +
+                ", credit=" + credit +
                 ", teacher=" + teacher +
                 ", department=" + department.getDepartmentName() +
                 ", students=" + studentStr +
-                '}';
+                "]}";
     }
 }
