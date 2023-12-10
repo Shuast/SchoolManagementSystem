@@ -1,6 +1,5 @@
 package org.example.dto;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Student {
     private String fname;
     private Course[] courses;
@@ -43,16 +41,16 @@ public class Student {
         String courseStr = "[";
         for (Course course : courses) {
             if (course != null) {
-                courseStr += course + ", ";
+                courseStr += course.getCourseName() + ", ";
             }
         }
         return "Student{" +
-                ", id='" + id + '\'' +
-                "fname='" + fname + '\'' +
+                "id='" + id + '\'' +
+                ", fname='" + fname + '\'' +
                 ", lname='" + lname + '\'' +
                 ", department=" + department +
                 ", courseNum=" + courseNum +
                 ", courses=" + courseStr +
-                '}';
+                "]}";
     }
 }
